@@ -1,0 +1,7 @@
+/target
+**/*.rs.bk
+*.pdb
+.DS_Store
+
+# Keep tasks private by default (remove this line to commit team-visible tasks)
+.shipflow/

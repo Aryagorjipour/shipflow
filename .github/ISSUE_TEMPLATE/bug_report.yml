@@ -1,0 +1,74 @@
+name: Bug report
+description: Report something that isn't working as expected
+title: "[bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in what you can — redact private task titles if needed.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+      placeholder: `shipflow done foo` fails with...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      placeholder: Task should be marked done and saved to tasks.json
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. `shipflow add "test"`
+        2. `shipflow done test --no-link`
+        3. See error
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: shipflow version
+      placeholder: Run `shipflow --version`
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: context
+    attributes:
+      label: Context
+      options:
+        - label: Inside a git repository
+        - label: Using `--global` storage
+        - label: stdout is piped (non-TTY)
+        - label: `NO_COLOR` is set
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Additional output
+      description: Paste stderr/stdout or set `RUST_LOG=shipflow=debug` and retry.
+      render: shell

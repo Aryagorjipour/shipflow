@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & discussions
+    url: https://github.com/Aryagorjipour/shipflow/discussions
+    about: Ask questions and share workflows (enable Discussions in repo settings if needed)
+  - name: Contributing guide
+    url: https://github.com/Aryagorjipour/shipflow/blob/main/CONTRIBUTING.md
+    about: How to contribute code and report issues properly

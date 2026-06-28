@@ -1,0 +1,42 @@
+name: Feature request
+description: Suggest an idea for shipflow
+title: "[feat]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        shipflow aims to stay lightweight. Help us understand the problem before the solution.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What pain point does this solve?
+      placeholder: I want to paste weekly reports into Obsidian without manual formatting...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      placeholder: Add `shipflow report week --format obsidian`
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      placeholder: Using `jq` on tasks.json, or an external script...
+
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Alignment with shipflow principles
+      options:
+        - label: Local-first / no network by default
+        - label: Git integration is optional
+        - label: Low friction terminal UX
+        - label: Simple by default
