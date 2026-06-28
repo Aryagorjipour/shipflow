@@ -64,3 +64,22 @@ fn round_trip_task_persistence() {
     let raw = fs::read_to_string(ctx.tasks_path).unwrap();
     assert!(raw.contains("Persist me"));
 }
+
+#[test]
+fn overwrite_save_updates_existing_file() {
+    let temp = assert_fs::TempDir::new().unwrap();
+    let repo = temp.path();
+    common::init_git_repo(repo);
+
+    let ctx = resolve_storage(false, repo).unwrap();
+    let mut store = TaskStore::open(&ctx).unwrap();
+    store.add(Task::new("First", vec![], None)).unwrap();
+    store.add(Task::new("Second", vec![], None)).unwrap();
+
+    let store2 = TaskStore::open(&ctx).unwrap();
+    assert_eq!(store2.tasks().len(), 2);
+
+    let raw = fs::read_to_string(ctx.tasks_path).unwrap();
+    assert!(raw.contains("First"));
+    assert!(raw.contains("Second"));
+}

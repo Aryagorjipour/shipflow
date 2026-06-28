@@ -55,7 +55,7 @@ pub fn resolve_storage(global_flag: bool, cwd: &Path) -> Result<StorageContext> 
 fn global_tasks_path() -> Result<PathBuf> {
     let proj_dirs =
         ProjectDirs::from("com", "shipflow", "shipflow").ok_or_else(|| ShipflowError::Storage {
-            path: PathBuf::from("~/.config/shipflow"),
+            path: PathBuf::from("global config directory"),
             message: "could not resolve config directory".to_owned(),
         })?;
     Ok(proj_dirs.config_dir().join("tasks.json"))
@@ -152,6 +152,13 @@ fn save_file(path: &Path, file: &TaskFile) -> Result<()> {
     let tmp_path = path.with_extension("json.tmp");
     let json = serde_json::to_string_pretty(&sorted)?;
     fs::write(&tmp_path, json)?;
+
+    // Windows cannot rename over an existing file; Unix replaces atomically.
+    #[cfg(windows)]
+    if path.exists() {
+        fs::remove_file(path)?;
+    }
+
     fs::rename(&tmp_path, path)?;
     Ok(())
 }

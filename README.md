@@ -40,14 +40,24 @@
 
 ## Installation
 
-### Prebuilt binaries (recommended)
-
-Download from [GitHub Releases](https://github.com/Aryagorjipour/shipflow/releases) (built with [cargo-dist](https://github.com/axodotdev/cargo-dist)).
+### Linux / macOS (recommended)
 
 ```bash
-# After first GitHub release:
-# curl --proto '=https' --tlsv1.2 -LsSf https://github.com/Aryagorjipour/shipflow/releases/latest/download/shipflow-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf \
+  https://github.com/Aryagorjipour/shipflow/releases/latest/download/shipflow-installer.sh | sh
 ```
+
+### Windows (PowerShell)
+
+```powershell
+irm https://github.com/Aryagorjipour/shipflow/releases/latest/download/shipflow-installer.ps1 | iex
+```
+
+Restart your terminal after install so PATH updates take effect.
+
+**Manual install:** download `shipflow-x86_64-pc-windows-msvc.zip` from [GitHub Releases](https://github.com/Aryagorjipour/shipflow/releases), extract `shipflow.exe`, and add it to your PATH.
+
+**TUI tip:** use [Windows Terminal](https://github.com/microsoft/terminal) for `shipflow board`.
 
 ### Cargo
 
@@ -97,6 +107,10 @@ shipflow board                # optional kanban TUI
 shipflow completions fish > ~/.config/fish/completions/shipflow.fish
 shipflow completions bash > ~/.local/share/bash-completion/completions/shipflow
 shipflow completions zsh > ~/.zfunc/_shipflow
+```
+
+```powershell
+shipflow completions powershell >> $PROFILE
 ```
 
 ## Storage modes
