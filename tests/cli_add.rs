@@ -26,14 +26,15 @@ fn add_global_flag_uses_global_storage() {
     common::init_git_repo(repo);
 
     let home = repo.join("home");
-    let config = home.join(".config");
-    std::fs::create_dir_all(&config).unwrap();
+    std::fs::create_dir_all(&home).unwrap();
 
-    common::shipflow_cmd()
-        .current_dir(repo)
-        .env("HOME", &home)
-        .env("XDG_CONFIG_HOME", &config)
-        .args(["add", "--global", "Global task"])
+    let mut cmd = common::shipflow_cmd();
+    cmd.current_dir(repo);
+    for (key, value) in common::global_storage_env(&home) {
+        cmd.env(key, value);
+    }
+
+    cmd.args(["add", "--global", "Global task"])
         .assert()
         .success();
 
