@@ -53,12 +53,34 @@ pub fn resolve_storage(global_flag: bool, cwd: &Path) -> Result<StorageContext> 
 }
 
 fn global_tasks_path() -> Result<PathBuf> {
+    if let Some(dir) = config_dir_override()? {
+        return Ok(dir.join("tasks.json"));
+    }
+
     let proj_dirs =
         ProjectDirs::from("com", "shipflow", "shipflow").ok_or_else(|| ShipflowError::Storage {
             path: PathBuf::from("global config directory"),
             message: "could not resolve config directory".to_owned(),
         })?;
     Ok(proj_dirs.config_dir().join("tasks.json"))
+}
+
+/// Optional absolute config directory (used by integration tests; portable installs).
+fn config_dir_override() -> Result<Option<PathBuf>> {
+    let Ok(raw) = std::env::var("SHIPFLOW_CONFIG_DIR") else {
+        return Ok(None);
+    };
+    if raw.is_empty() {
+        return Ok(None);
+    }
+    let path = PathBuf::from(&raw);
+    if !path.is_absolute() {
+        return Err(ShipflowError::Storage {
+            path: PathBuf::from("SHIPFLOW_CONFIG_DIR"),
+            message: "must be an absolute path".to_owned(),
+        });
+    }
+    Ok(Some(path))
 }
 
 pub struct TaskStore {

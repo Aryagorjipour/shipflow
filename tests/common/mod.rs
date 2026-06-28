@@ -28,39 +28,20 @@ pub fn init_git_repo(dir: &Path) {
 /// Expected global `tasks.json` path when env vars from [`global_storage_env`] are set.
 #[allow(dead_code)]
 pub fn global_storage_path(base: &Path) -> PathBuf {
-    #[cfg(windows)]
-    {
-        base.join("AppData")
-            .join("Roaming")
-            .join("shipflow")
-            .join("tasks.json")
-    }
-    #[cfg(not(windows))]
-    {
-        base.join(".config").join("shipflow").join("tasks.json")
-    }
+    base.join(".shipflow-global").join("tasks.json")
 }
 
 /// Env vars that redirect shipflow global storage into `base` (cross-platform).
+#[allow(dead_code)]
 pub fn global_storage_env(base: &Path) -> HashMap<String, String> {
+    let config_dir = base.join(".shipflow-global");
+    fs::create_dir_all(&config_dir).expect("create global config dir");
+
     let mut env = HashMap::new();
-
-    #[cfg(windows)]
-    {
-        let appdata = base.join("AppData").join("Roaming");
-        fs::create_dir_all(&appdata).expect("create APPDATA dir");
-        env.insert("USERPROFILE".into(), path_to_env(base));
-        env.insert("APPDATA".into(), path_to_env(&appdata));
-    }
-
-    #[cfg(not(windows))]
-    {
-        let config = base.join(".config");
-        fs::create_dir_all(&config).expect("create config dir");
-        env.insert("HOME".into(), path_to_env(base));
-        env.insert("XDG_CONFIG_HOME".into(), path_to_env(&config));
-    }
-
+    env.insert(
+        "SHIPFLOW_CONFIG_DIR".into(),
+        config_dir.to_string_lossy().into_owned(),
+    );
     env
 }
 
@@ -82,8 +63,4 @@ pub fn write_sample_tasks(path: &Path) {
 }"#,
     )
     .expect("write tasks");
-}
-
-fn path_to_env(path: &Path) -> String {
-    path.to_string_lossy().into_owned()
 }
